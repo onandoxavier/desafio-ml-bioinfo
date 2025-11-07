@@ -1,0 +1,74 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Data (não versionar dados grandes)
+data/raw/*.txt
+data/raw/*.fasta
+data/raw/*.fa
+data/processed/*.csv
+data/processed/*.fasta
+
+# Modelos treinados (não versionar)
+models/*.pkl
+models/*.joblib
+models/*.h5
+models/*.pt
+
+# Resultados (pode versionar apenas PNGs importantes)
+results/*.png
+results/*.pdf
+
+# MathFeature (biblioteca externa)
+MathFeature/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Kaggle credentials
+.kaggle/
+kaggle.json
+
+# Lock files (opcional - alguns projetos versionam)
+# uv.lock
+
+# Temporary files
+*.log
+*.tmp
+.cache/
