@@ -31,9 +31,6 @@ env/
 *.ipynb_checkpoints/
 
 # Data (não versionar dados grandes)
-data/raw/*.txt
-data/raw/*.fasta
-data/raw/*.fa
 data/processed/*.csv
 data/processed/*.fasta
 

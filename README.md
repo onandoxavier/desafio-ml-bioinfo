@@ -1,49 +1,75 @@
-# 🧬 Desafio de Bioinformática Inteligente
+# 🧬 Desafio de Bioinformática - Classificação de Sequências Proteicas
 
-Projeto de classificação de sequências biológicas usando Machine Learning e extração de features baseada em redes complexas.
+Projeto de classificação binária de sequências de **proteínas** usando Machine Learning com features específicas de aminoácidos extraídas pela biblioteca MathFeature.
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Accuracy](https://img.shields.io/badge/Accuracy-86.0%25-brightgreen.svg)]()
 
 ## 📋 Sobre o Projeto
 
-Este projeto foi desenvolvido para o **Desafio de Ciência de Dados na Bioinformática Inteligente**, onde o objetivo é classificar sequências biológicas (DNA/RNA) em duas categorias: Positivo e Negativo.
+Este projeto foi desenvolvido para o **Desafio de Ciência de Dados na Bioinformática InteliGente** (Kaggle), onde o objetivo é classificar sequências de **proteínas** (aminoácidos) em duas categorias: Positivo (1) e Negativo (0).
 
 ### 🎯 Objetivos
-- Extrair features de sequências biológicas usando técnicas de redes complexas
-- Treinar modelos de Machine Learning para classificação binária
-- Alcançar alta performance (F1-Score) na predição de sequências
+- ✅ Identificar que as sequências são de **proteínas**
+- ✅ Extrair features específicas de aminoácidos (AAC, DPC, Entropy)
+- ✅ Treinar ensemble de modelos gradient boosting
+- ✅ Alcançar alta acurácia (86%+) na classificação
 
-### 📊 Resultados
-- **Melhor Modelo:** Random Forest (tunado)
-- **F1-Score (CV):** 69.6%
-- **Features:** 79 (baseadas em grafos de k-mers)
+### 📊 Resultados Finais
+
+| Modelo | Acurácia (CV) | ROC-AUC | F1-Score |
+|--------|---------------|---------|----------|
+| **🏆 Ensemble (Top 3)** | **86.0%** | **94.0%** | **85.8%** |
+| LightGBM | 85.3% | 93.4% | 85.2% |
+| XGBoost | 85.1% | 93.1% | 84.9% |
+| Random Forest | 84.7% | 93.2% | 84.3% |
+| CatBoost | 85.1% | 93.1% | 84.9% |
+| MLP (sklearn) | 83.0% | 91.8% | 82.8% |
+| Keras DNN | 78.9% | - | - |
+
+**Features:** 430 (AAC + DPC + Entropy Shannon)  
+**Métrica do Kaggle:** Acurácia
 
 ## 🗂️ Estrutura do Projeto
 
 ```
-desafio_CD_Bioinfo/
+desafio_ml_Bioinfo/
 ├── README.md                          # Este arquivo
 ├── LICENSE                            # Licença MIT
-├── pyproject.toml                     # Dependências (gerenciadas com uv)
-├── .gitignore                         # Arquivos ignorados pelo Git
+├── pyproject.toml                     # Configuração do projeto (uv)
 │
-├── data/                              # Dados (não versionados)
-│   ├── raw/                           # Dados brutos (FASTA)
-│   └── processed/                     # Features extraídas e submissions
+├── data/                              # Dados do desafio
+│   ├── raw/                           # Dados originais
+│   │   ├── Pos_train_fasta.txt        # 1.940 sequências positivas
+│   │   ├── Neg_train_fasta.txt        # 1.940 sequências negativas
+│   │   └── seqs_test.txt              # 970 sequências de teste
+│   └── processed/                     # Dados processados
+│       ├── train_combined.fasta       # Treino combinado com labels
+│       ├── train_features.csv         # 430 features de treino
+│       ├── test_features.csv          # 430 features de teste
+│       ├── features_aac_*.csv         # AAC (20 features)
+│       ├── features_dpc_*.csv         # DPC (400 features)
+│       ├── features_entropy_*.csv     # Entropy Shannon (~10)
+│       └── submission.csv             # Predições finais (Kaggle)
 │
-├── notebooks/                         # Análises exploratórias
-│   ├── 01_exploracao_dados.ipynb      # EDA inicial
-│   ├── 02_feature_engineering.ipynb   # Extração de features
-│   └── 03_modelagem.ipynb             # Modelagem e predição
+├── notebooks/                         # Análises Jupyter
+│   ├── 01_exploracao_dados.ipynb      # EDA + detecção de proteínas
+│   ├── 02_feature_engineering.ipynb   # Extração AAC/DPC/Entropy
+│   └── 03_modelagem.ipynb             # Baseline + Ensemble + Keras
 │
-├── models/                            # Modelos treinados (não versionados)
-├── results/                           # Gráficos e resultados
-├── src/                               # Código Python modular (opcional)
-└── MathFeature/                       # Biblioteca externa (não versionada)
+├── results/                           # Resultados e submissões
+│   └── submission.csv                 # Última submissão
+│
+└── MathFeature/                       # Biblioteca clonada
+    ├── methods/
+    │   ├── ExtractionTechniques-Protein.py  # AAC, DPC, TPC
+    │   ├── EntropyClass.py                  # Entropy Shannon
+    │   └── Mappings-Protein.py              # Mapeamentos numéricos
+    └── ...
 ```
 
-## 🚀 Como Usar
+## �🚀 Como Usar
 
 ### 1. Pré-requisitos
 
@@ -54,14 +80,12 @@ desafio_CD_Bioinfo/
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/desafio_CD_Bioinfo.git
-cd desafio_CD_Bioinfo
+git clone https://github.com/seu-usuario/desafio_ml_Bioinfo.git
+cd desafio_ml_Bioinfo
 
 # Crie o ambiente virtual com uv
 uv venv .venv
 source .venv/bin/activate  # Linux/Mac
-# ou
-.venv\Scripts\activate  # Windows
 
 # Instale as dependências
 uv sync
@@ -81,82 +105,69 @@ Coloque os arquivos FASTA na pasta `data/raw/`:
 
 Execute os notebooks na ordem:
 
-```bash
-# Inicia o Jupyter
-uv run jupyter notebook
-
-# Ou use JupyterLab
-uv run jupyter lab
-```
-
-1. **01_exploracao_dados.ipynb** - Análise exploratória inicial
-2. **02_feature_engineering.ipynb** - Extração de features com MathFeature
-3. **03_modelagem.ipynb** - Treino, tuning e predição
+1. **01_exploracao_dados.ipynb** - EDA e detecção de proteínas
+2. **02_feature_engineering.ipynb** - Extração AAC + DPC + Entropy (430 features)
+3. **03_modelagem.ipynb** - Baseline + Ensemble + Keras DNN + Predição
 
 ### 5. Geração de Submission
 
-O notebook `03_modelagem.ipynb` gera automaticamente o arquivo `data/processed/submission.csv` pronto para submissão no Kaggle.
+O notebook `03_modelagem.ipynb` gera automaticamente o arquivo `results/submission.csv` com as predições do modelo ensemble, pronto para submissão no Kaggle (formato: ID,TARGET).
 
-## 🔬 Metodologia
+## 🔧 Tecnologias Utilizadas
 
-### Extração de Features
-- **Técnica:** ComplexNetworksClass-v2 (MathFeature)
-- **Tipo:** Métricas de grafos construídos a partir de k-mers
-- **Features geradas:** 79 (betweenness, degree, clustering, etc.)
+- **Python 3.11+** - Linguagem principal
+- **uv** - Gerenciador de pacotes e ambiente virtual
+- **Biopython** - Manipulação de sequências FASTA
+- **MathFeature** - Extração de features de proteínas
+- **scikit-learn** - Modelos de ML e pipeline
+- **LightGBM, XGBoost, CatBoost** - Gradient boosting
+- **TensorFlow/Keras** - Deep learning (exploratório)
+- **pandas, numpy** - Manipulação de dados
+- **matplotlib, seaborn** - Visualizações
 
-### Modelos Testados
-1. Logistic Regression (baseline)
-2. Random Forest ✅ (melhor)
-3. XGBoost
-4. LightGBM
-5. SVM
+## Metodologia
 
-### Otimização
-- **Cross-Validation:** Stratified 5-Fold
-- **Hyperparameter Tuning:** RandomizedSearchCV (50 iterações)
-- **Métrica principal:** F1-Score
+### 1. Exploração dos Dados (`01_exploracao_dados.ipynb`)
+- Análise de 3.880 sequências de treino (1.940 positivas, 1.940 negativas)
+- 970 sequências de teste
+- **Detecção do tipo de sequência:** Aminoácidos (proteínas)
+- Verificação de balanceamento, redundância e caracteres inválidos
 
-## 📦 Dependências Principais
+### 2. Extração de Features (`02_feature_engineering.ipynb`)
+Foram extraídas **430 features** usando a biblioteca **MathFeature** com métodos específicos para proteínas:
 
-- **biopython** - Manipulação de sequências biológicas
-- **scikit-learn** - Modelos de ML e validação
-- **xgboost** - Gradient boosting
-- **lightgbm** - Gradient boosting eficiente
-- **pandas** - Manipulação de dados
-- **matplotlib/seaborn** - Visualizações
-- **python-igraph** - Análise de grafos (MathFeature)
+- **AAC (Amino Acid Composition):** 20 features
+  - Frequência de cada um dos 20 aminoácidos
+  - Captura a composição global da proteína
+  
+- **DPC (Dipeptide Composition):** 400 features
+  - Frequência de todos os pares consecutivos de aminoácidos (20x20)
+  - Captura padrões locais e ordem das sequências
+  
+- **Entropy Shannon:** ~3 features
+  - Medida de aleatoriedade/complexidade da sequência
+  - Cálculo de entropia em diferentes janelas
 
-Ver `pyproject.toml` para lista completa.
+### 3. Modelagem (`03_modelagem.ipynb`)
 
-## 📈 Possíveis Melhorias
+#### Baseline com 7 Modelos:
+- Logistic Regression
+- Random Forest
+- XGBoost
+- **LightGBM** (melhor individual: 85.3%)
+- SVM Linear
+- MLP (sklearn)
+- CatBoost
 
-- [ ] Adicionar k-mers features (frequências de subsequências)
-- [ ] Testar Entropy e Chaos Game Theory features
-- [ ] Implementar ensemble (Voting/Stacking)
-- [ ] Feature selection (remover features redundantes)
-- [ ] Testar redes neurais (LSTM para sequências)
+#### Ensemble (Voting Classifier):
+- Votação dos **top 3 modelos** por acurácia
+- Resultado: **86.0% de acurácia** (ganho de ~1% sobre melhor individual)
 
-## 🤝 Contribuições
+#### Exploração com Deep Learning:
+- Keras DNN (512→256→128→64 neurônios, BatchNorm, Dropout, L2)
+- Resultado: 78.9% (inferior aos modelos tree-based)
+- Para datasets tabulares pequenos (~4k amostras), gradient boosting supera deep learning
 
-Contribuições são bem-vindas! Sinta-se à vontade para:
-- Reportar bugs
-- Sugerir novas features
-- Enviar pull requests
+**Validação:** 5-Fold Stratified Cross-Validation
 
-## 📄 Licença
-
-Este projeto está sob a licença MIT. Veja [LICENSE](LICENSE) para mais detalhes.
-
-## 👥 Autores
-
-- **Jonathan** - [GitHub](https://github.com/seu-usuario)
-
-## 🙏 Agradecimentos
-
-- [MathFeature](https://github.com/Bonidia/MathFeature) - Biblioteca de extração de features
-- Professores e organizadores do desafio
-- Comunidade de Bioinformática
-
----
-
-**Nota:** Este projeto foi desenvolvido para fins educacionais como parte do Desafio de Ciência de Dados na Bioinformática Inteligente.
+**Nota:** Este projeto foi desenvolvido para fins educacionais como parte do Desafio de Ciência de Dados na Bioinformática InteliGente.
