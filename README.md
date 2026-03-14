@@ -1,5 +1,7 @@
 # 🧬 Desafio de Bioinformática - Classificação de Sequências Proteicas
 
+# uma altercao importante
+
 Projeto de classificação binária de sequências de **proteínas** usando Machine Learning com features específicas de aminoácidos extraídas pela biblioteca MathFeature.
 
 [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
